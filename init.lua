@@ -56,7 +56,8 @@ require("lazy").setup({
                 view = {width = 50},
                 filters = {dotfiles = false},
                 actions = {open_file = {quit_on_open = false}},
-                git = {enable = true, ignore = false}
+                git = {enable = true, ignore = false, show_on_dirs = true},
+                renderer = {icons = {git_placement = "before", show = {git = true},},},
             })
 
             -- Keybind to toggle file tree
@@ -99,5 +100,41 @@ require("lazy").setup({
           -- Make Cmd+P work like VSCode (since leader is space, use space+p for now)
           vim.keymap.set('n', '<leader>p', ':Telescope find_files<CR>')
         end,
-    }
+    },
+    {
+        "lewis6991/gitsigns.nvim",
+        config = function()
+          require('gitsigns').setup({
+            signs = {
+              add          = { text = '│' },
+              change       = { text = '│' },
+              delete       = { text = '_' },
+              topdelete    = { text = '‾' },
+              changedelete = { text = '~' },
+              untracked    = { text = '┆' },
+            },
+          })
+        end,
+    },
+    {
+        "nvim-lualine/lualine.nvim",
+        dependencies = { "nvim-tree/nvim-web-devicons" },
+        config = function()
+          require('lualine').setup({
+            options = {
+              theme = 'auto',
+              section_separators = '',
+              component_separators = '|'
+            },
+            sections = {
+              lualine_a = {'mode'},
+              lualine_b = {'branch', 'diff', 'diagnostics'},
+              lualine_c = {'filename'},
+              lualine_x = {'encoding', 'fileformat', 'filetype'},
+              lualine_y = {'progress'},
+              lualine_z = {'location'}
+            },
+          })
+        end,
+      }
 })
