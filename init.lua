@@ -24,8 +24,15 @@ vim.opt.expandtab = true -- Use spaces instead of tabs
 vim.opt.autoindent = true -- Copy indent from current line
 vim.opt.smartindent = true -- Make indenting smarter
 
+-- Folding
+vim.opt.foldenable = true
+vim.opt.foldmethod = "expr"
+vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
+vim.opt.foldlevelstart = 99
+vim.keymap.set("n", "<Space>", "za", { desc = "Toggle fold" })
+
 -- Set colorscheme
-vim.cmd.colorscheme("habamax")
+vim.cmd.colorscheme("default")
 
 -- Clipboard integration
 vim.opt.clipboard = "unnamedplus" -- Use system clipboard for all yank/paste operations
@@ -211,7 +218,7 @@ require("lazy").setup({
 			-- Define your formatters
 			formatters_by_ft = {
 				lua = { "stylua" },
-				python = { "black" },
+				python = { "ruff_fix", "ruff_format", "ruff_organize_imports" },
 				sql = { "sqlfmt" },
 				yml = { "yamlfmt" },
 				yaml = { "yamlfmt" },
@@ -232,6 +239,38 @@ require("lazy").setup({
 		init = function()
 			-- If you want the formatexpr, here is the place to set it
 			vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"
+		end,
+	},
+	{
+		"catppuccin/nvim",
+		name = "catppuccin",
+		priority = 1000,
+		config = function()
+			require("catppuccin").setup({
+				flavour = "mocha", -- latte, frappe, macchiato, mocha
+				background = { -- :h background
+					light = "latte",
+					dark = "mocha",
+				},
+				transparent_background = true,
+				show_end_of_buffer = false,
+				term_colors = false,
+				dim_inactive = {
+					enabled = false,
+					shade = "dark",
+					percentage = 0.15,
+				},
+				no_italic = false,
+				no_bold = false,
+				no_underline = false,
+				styles = {
+					comments = { "italic" },
+					conditionals = { "italic" },
+				},
+			})
+
+			-- Set the colorscheme
+			vim.cmd.colorscheme("catppuccin")
 		end,
 	},
 })
