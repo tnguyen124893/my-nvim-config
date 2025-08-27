@@ -29,7 +29,6 @@ vim.opt.foldenable = true
 vim.opt.foldmethod = "expr"
 vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
 vim.opt.foldlevelstart = 99
-vim.keymap.set("n", "<Space>", "za", { desc = "Toggle fold" })
 
 -- Set colorscheme
 vim.cmd.colorscheme("default")
@@ -69,7 +68,7 @@ require("lazy").setup({
 				update_cwd = true,
 				view = { width = 50 },
 				filters = { dotfiles = false },
-				actions = { open_file = { quit_on_open = false } },
+				actions = { open_file = { quit_on_open = true } },
 				git = { enable = true, ignore = false, show_on_dirs = true },
 				renderer = { icons = { git_placement = "before", show = { git = true } } },
 			})
@@ -203,7 +202,7 @@ require("lazy").setup({
 		keys = {
 			{
 				-- Customize or remove this keymap to your liking
-				"<leader>f",
+				"<C-f>",
 				function()
 					require("conform").format({ async = true })
 				end,
@@ -227,14 +226,12 @@ require("lazy").setup({
 			default_format_opts = {
 				lsp_format = "fallback",
 			},
-			-- Set up format-on-save
-			-- format_on_save = { timeout_ms = 500 },
 			-- Customize formatters
-			-- formatters = {
-			--   shfmt = {
-			--     prepend_args = { "-i", "2" },
-			--   },
-			-- },
+			formatters = {
+				sqlfmt = {
+					append_args = { "--dialect", "clickhouse" },
+				},
+			},
 		},
 		init = function()
 			-- If you want the formatexpr, here is the place to set it
@@ -271,6 +268,29 @@ require("lazy").setup({
 
 			-- Set the colorscheme
 			vim.cmd.colorscheme("catppuccin")
+		end,
+	},
+	{
+		"askfiy/visual_studio_code",
+		priority = 100,
+		config = function()
+			require("visual_studio_code").setup({
+				transparent = true,
+			})
+			vim.cmd([[colorscheme visual_studio_code]])
+		end,
+	},
+	{
+		"akinsho/bufferline.nvim",
+		version = "*",
+		dependencies = "nvim-tree/nvim-web-devicons",
+		config = function()
+			vim.opt.termguicolors =
+				true, require("bufferline").setup({
+					options = {
+						numbers = "buffer_id",
+					},
+				})
 		end,
 	},
 })
